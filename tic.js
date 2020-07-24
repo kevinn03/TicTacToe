@@ -1,22 +1,41 @@
 const gameBoard = (() => {
     let board = [];
     let player = [];
+    const container = document.querySelector(".game");
 
-
-    const setBoard = (size = 3) => {
-        if(size < 3){size = 3};
-        for(let i = 0; i < size; i++){
-            
-            let arr = [];
-            for(let j = 0; j < size; j++){
-                arr.push("-");
-            }
-            board.push(arr);
+const setBoard = (size = 3) => {
+    if(size < 3){size = 3};
+    for(let i = 0; i < size; i++){
+        let arr = [];
+        
+        for(let j = 0; j < size; j++){
+            arr.push("");
         }
+        board.push(arr);
+    }
 
-
+        
+    
+    let frac = "";
+    for(let i = 0; i < size; i++){
+            
+        for (let j = 0; j < size; j++) {
+            let grid = document.createElement("div");
+            grid.classList.add(`box${i}${j}`);
+            grid.classList.add("box");
+            grid.addEventListener("click", mark)
+            container.appendChild(grid);
+        }
+    
+    }
+    
+        for(let k = 0; k < size; k++){
+            frac += "1fr "; 
+        }
+        container.style.cssText = `grid-template-columns: ${frac}`;
     };
 
+    
     const getBoard = () => {
         let copyBoard = board.slice();
         return copyBoard;
@@ -83,7 +102,7 @@ const gameBoard = (() => {
         return false;
     }
 
-    const _tie = () => {
+    const tie = () => {
 
     };
 
@@ -91,6 +110,19 @@ const gameBoard = (() => {
 
     }
 
+    const mark = () => {
 
-return {setBoard, getBoard, addPlayer, win};
+    }
+
+
+
+
+return {setBoard, getBoard, addPlayer, win, render, tie};
 })();
+
+
+window.onload = function(){
+    
+    
+    gameBoard.setBoard();
+}
