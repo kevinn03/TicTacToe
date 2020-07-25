@@ -2,6 +2,7 @@ body {
     margin: auto;
     width: 1200px;
     height: 1200px;
+    background-color: rgb(218, 216, 216);
 }
 .game {
     width: auto;
@@ -14,13 +15,14 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 50px;
+    font-size: 100px;
+    
 }
 
 
 
 .box {
-    color:white;
+    color:rgb(218, 216, 216);
     vertical-align: middle;
     border: 1px solid black;
     
@@ -40,9 +42,24 @@ h1 {
 .btn {
     text-align: center;
     margin: 5%;
+    
 }
 
 .start {
     height: 40px;
     width: 70px;
+    
+}
+
+.winner {
+    font-size: 100px;
+    
+}
+
+.first {
+    color: rgb(131, 1, 1);
+}
+
+.second {
+    color: rgb(2, 2, 100);
 }

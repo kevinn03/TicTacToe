@@ -2,11 +2,15 @@
 
 const gameBoard = (() => {
     let board = [];
-    
+    let dimension;
     let counter;
+    
     const container = document.querySelector(".game");
 
 
+const getDimension = () => dimension;
+
+const getCounter = () => counter;
 
 const clearBoard = () => {
     board = [];
@@ -17,7 +21,17 @@ const clearBoard = () => {
 } 
 const setBoard = (size = 3, count = 3) => {
      
-    if(size < 3){size = 3};
+    if(size <= 3){
+        size = 3
+        
+        count = 3;};
+    
+    if(count > size){
+        count = size;
+        
+    }
+
+    dimension = size;
     for(let i = 0; i < size; i++){
         let arr = [];
         
@@ -25,7 +39,8 @@ const setBoard = (size = 3, count = 3) => {
             arr.push("-");
         }
         board.push(arr);
-        counter = count
+        counter = count;
+        
     }
 
     
@@ -191,7 +206,7 @@ const setBoard = (size = 3, count = 3) => {
 
 
 
-return {setBoard, getBoard, win, render, tie, clearBoard};
+return {setBoard, getBoard, win, render, tie, clearBoard, getDimension, getCounter};
 })();
 
 
@@ -204,7 +219,13 @@ const Playa = (marker, name = "John Doe") => {
     };
     
     const move = () => marker;
-    const setName = (nam) => name = nam;
+    const setName = (nam) => {
+        if(nam === null || nam === ""){
+        name = "John Doe";}
+        else{
+            name = nam;
+        }
+    }
     const getName = () => name; 
     return {getName,setMarker, move, setName };
 };
@@ -217,12 +238,14 @@ const tic = (() => {
     const initiate = () => {
         let button = document.querySelector(".start");
         button.addEventListener("click", _clearGame);
-        gb.setBoard();
+        let size = prompt("Choose size of the board!") * 1;
+        let winCond = prompt("Choose how many in a row to win") * 1;
+        gb.setBoard(size, winCond);
         _addPlayer();
         gb.render();
         setCurr();
 
-    }
+    };
     const getPlayer = () => {
         return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
     };
@@ -230,8 +253,11 @@ const tic = (() => {
     const _addPlayer = () => {
         let player1Name = prompt("Player1 enter your name!");
         let player2Name = prompt("Player2 enter your name");
-        const player1 = Playa("X", player1Name);
-        const player2 = Playa("O", player2Name);
+        const player1 = Playa("X",);
+        player1.setName(player1Name);
+
+        const player2 = Playa("O",);
+        player2.setName(player2Name);
         player.push(player1);
         player.push(player2);
 
@@ -244,25 +270,37 @@ const tic = (() => {
         else{
             current = player[0];
         }
-    }
+    };
     const getCurr = () => current;
 
     const _clearGame = () => {
-       
+       let display = document.querySelector(".winner");
+       if(display !== null){
+        display.remove();
+       }
         gb.clearBoard();
         current = null;
-        gb.setBoard();
+        gb.setBoard(gb.getDimension(), gb.getCounter());
         gb.render();
         setCurr();
-    }
+    };
+
+    const _displayW = () => {
+        let display = document.createElement("div");
+        let game = document.querySelector(".btn");
+        display.classList.add("winner");
+        game.appendChild(display);
+        display.textContent = `${getCurr().getName()} is the winner!`
+
+    };
 
     const test = (x) => {
         gb.render();
         
         
         if(gb.win(x)){
-            
-            alert(`${getCurr().getName()} is the winner!`)
+            _displayW();
+            //alert(`${getCurr().getName()} is the winner!`)
         }
         else if(gb.tie(x)){
             alert("tie game");
@@ -277,11 +315,3 @@ const tic = (() => {
 })();
 
 tic.initiate();
-
-    
-    
-   
-    
-
-
-
