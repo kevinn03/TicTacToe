@@ -20,7 +20,7 @@ h1 {
 
 
 .box {
-    
+    color:white;
     vertical-align: middle;
     border: 1px solid black;
     
@@ -30,13 +30,19 @@ h1 {
     
 }
 
-.active {
-    color: black;  
-    vertical-align: middle;
-    border: 1px solid black;
+.xmark {
+    color: rgb(131, 1, 1);  
     
+}
+.omark{
+    color: rgb(2, 2, 100);
+}
+.btn {
     text-align: center;
-    font-size: 12vw;
-    margin: 0;
-    
+    margin: 5%;
+}
+
+.start {
+    height: 40px;
+    width: 70px;
 }

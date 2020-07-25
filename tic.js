@@ -7,7 +7,16 @@ const gameBoard = (() => {
     const container = document.querySelector(".game");
 
 
+
+const clearBoard = () => {
+    board = [];
+    
+  while (container.lastElementChild) {
+    container.removeChild(container.lastElementChild);
+  }
+} 
 const setBoard = (size = 3, count = 3) => {
+     
     if(size < 3){size = 3};
     for(let i = 0; i < size; i++){
         let arr = [];
@@ -147,28 +156,42 @@ const setBoard = (size = 3, count = 3) => {
 
     }
 
+    const _valid = (x, y) => {
+        
+        if(board[x][y] === "-"){
+            
+            return true;
+        }
+        alert("this spot is taken");
+        return false;
+    };
 
     function mark(marker, attach) {
         
         let x = attach.classList[0].slice(-2,-1) * 1;
         let y = attach.classList[0].slice(-1) * 1;
         
-        if(board[x][y] === "-"){
-            console.log(board[x][y]);
+        if(_valid(x,y)){
+           if(marker === "X"){
+               attach.classList.add("xmark");
+           }
+           else{
+               attach.classList.add("omark");
+           }
             board[x][y] = marker;
-            console.log(board[x][y]);
+            
             tic.test(marker);
             
             return true;
         }
-
+        console.log("This spot is taken!");
         return false;
     }
 
 
 
 
-return {setBoard, getBoard, win, render, tie};
+return {setBoard, getBoard, win, render, tie, clearBoard};
 })();
 
 
@@ -191,15 +214,24 @@ const tic = (() => {
     let player = [];
     let current;
 
+    const initiate = () => {
+        let button = document.querySelector(".start");
+        button.addEventListener("click", _clearGame);
+        gb.setBoard();
+        _addPlayer();
+        gb.render();
+        setCurr();
+
+    }
     const getPlayer = () => {
         return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
     };
 
     const _addPlayer = () => {
-        const player1 = Playa("X");
-        
-        const player2 = Playa("O");
-        
+        let player1Name = prompt("Player1 enter your name!");
+        let player2Name = prompt("Player2 enter your name");
+        const player1 = Playa("X", player1Name);
+        const player2 = Playa("O", player2Name);
         player.push(player1);
         player.push(player2);
 
@@ -214,15 +246,15 @@ const tic = (() => {
         }
     }
     const getCurr = () => current;
-   
-    const start = () => {
+
+    const _clearGame = () => {
+       
+        gb.clearBoard();
+        current = null;
         gb.setBoard();
-        _addPlayer();
         gb.render();
         setCurr();
-
-
-    };
+    }
 
     const test = (x) => {
         gb.render();
@@ -240,11 +272,11 @@ const tic = (() => {
         }
     };
     
-    return {start, test, setCurr, getPlayer, getCurr}
+    return {test, setCurr, getPlayer, getCurr, initiate}
 
 })();
 
-tic.start();
+tic.initiate();
 
     
     
