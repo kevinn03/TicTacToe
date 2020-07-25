@@ -2,21 +2,10 @@
 
 const gameBoard = (() => {
     let board = [];
-    let player = [];
-    let current;
+    
     let counter;
     const container = document.querySelector(".game");
 
-
-    const setCurr = () => {
-        if(current === player[0]){
-            current = player[1];
-        }
-        else{
-            current = player[0];
-        }
-    }
-    const getCurr = () => current;
 
 const setBoard = (size = 3, count = 3) => {
     if(size < 3){size = 3};
@@ -41,7 +30,10 @@ const setBoard = (size = 3, count = 3) => {
             grid.classList.add(`box${i}${j}`);
             grid.classList.add("box");
             
-            grid.addEventListener("click", mark);
+            grid.addEventListener("click", function(){
+                let that = this;
+                mark(tic.getCurr().move(), that);
+            });
            ;
             container.appendChild(grid);
         }
@@ -53,24 +45,14 @@ const setBoard = (size = 3, count = 3) => {
         }
         container.style.cssText = `grid-template-columns: ${frac}`;
     
-    _addPlayer();
+    
 };
 
-    const getPlayer = () => {
-        return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
-    };
+    
 
     const getBoard = () => board;
 
-    const _addPlayer = () => {
-        const player1 = Playa("X");
-        
-        const player2 = Playa("O");
-        
-        player.push(player1);
-        player.push(player2);
-
-    };
+    
 
     const _winVert = (marker) => {
 
@@ -166,15 +148,16 @@ const setBoard = (size = 3, count = 3) => {
     }
 
 
-    function mark() {
-        let x = this.classList[0].slice(-2,-1) * 1;
-        let y = this.classList[0].slice(-1) * 1;
+    function mark(marker, attach) {
+        
+        let x = attach.classList[0].slice(-2,-1) * 1;
+        let y = attach.classList[0].slice(-1) * 1;
         
         if(board[x][y] === "-"){
             console.log(board[x][y]);
-            board[x][y] = current.move();
+            board[x][y] = marker;
             console.log(board[x][y]);
-            tic.test(current.move());
+            tic.test(marker);
             
             return true;
         }
@@ -185,7 +168,7 @@ const setBoard = (size = 3, count = 3) => {
 
 
 
-return {setBoard, getBoard, win, render, tie, setCurr, getPlayer, getCurr};
+return {setBoard, getBoard, win, render, tie};
 })();
 
 
@@ -205,12 +188,38 @@ const Playa = (marker, name = "John Doe") => {
 
 const tic = (() => {
     let gb = gameBoard;
-    let running = true;
+    let player = [];
+    let current;
+
+    const getPlayer = () => {
+        return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
+    };
+
+    const _addPlayer = () => {
+        const player1 = Playa("X");
+        
+        const player2 = Playa("O");
+        
+        player.push(player1);
+        player.push(player2);
+
+    };
+
+    const setCurr = () => {
+        if(current === player[0]){
+            current = player[1];
+        }
+        else{
+            current = player[0];
+        }
+    }
+    const getCurr = () => current;
+   
     const start = () => {
         gb.setBoard();
-    
+        _addPlayer();
         gb.render();
-        gb.setCurr();
+        setCurr();
 
 
     };
@@ -221,17 +230,17 @@ const tic = (() => {
         
         if(gb.win(x)){
             
-            alert(`${gb.getCurr().getName()} is the winner!`)
+            alert(`${getCurr().getName()} is the winner!`)
         }
         else if(gb.tie(x)){
             alert("tie game");
         }
         else{
-            gb.setCurr();
+            setCurr();
         }
     };
     
-    return {start, test}
+    return {start, test, setCurr, getPlayer, getCurr}
 
 })();
 
