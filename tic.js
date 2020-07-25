@@ -72,19 +72,23 @@ const setBoard = (size = 3, count = 3) => {
 
     };
 
-    /*const _winVert = (marker) => {
+    const _winVert = (marker) => {
 
         
-        for (let i = 0; i < board.length; i++) {
-                
+        for(let i = 0; i < board.length; i++){
+            let tally = 0;
+           
             for(let j = 0; j < board.length; j++){
-               if(board[j][i] !== marker){return false;}
+                
+                if(board[j][i] === marker ){
+                    tally++;
+                }
+                }
+            if(tally === counter){return true;}
             }
-            
-        }
-        return true;
+        return false;
     };
-    */
+    
     const _winHor = (marker) => {
         for(let i = 0; i < board.length; i++){
             let tally = 0;
@@ -94,39 +98,42 @@ const setBoard = (size = 3, count = 3) => {
                 if(board[i][j] === marker ){
                     tally++;
                 }
-                
-                
-            }
+                }
             if(tally === counter){return true;}
             }
         return false;
     };
 
-    // const _winDiagLeft = (marker) => {
-        
-    //     for (let i = 0; i < board.length; i++) {
-    //         if(board[i][i] !== marker){return false;}
-            
-    //     }
-    //     return true;
-    // };
+    const _winDiagLeft = (marker) => {
+        let tally = 0;
+        for (let i = 0; i < board.length; i++) {
+            if(board[i][i] === marker){
+                tally++
+            }
+            if(tally === counter){return true;}
+        }
+        return false;
+    };
 
-    // const _winDiagRight = (marker) => {
-        
-    //     let j = board.length - 1;
-    //     for (let i = 0; i < board.length; i++) {
-    //         if(board[i][j] !== marker){
-    //             j--;
-    //             return false;}
+    const _winDiagRight = (marker) => {
+        let tally = 0;
+        let j = board.length - 1;
+        for (let i = 0; i < board.length; i++) {
+            if(board[i][j] === marker){
+                tally++
+                j--;
+                
+            }
+            if(tally === counter){return true;}
             
-    //     }
-    //     return true;
-    // };
+        }
+        return false;
+    };
 
     const win = (marker) => {
        
-        // if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker))
-            if(_winHor(marker))
+        if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker))
+            
         {
             
         return true;}
@@ -157,7 +164,7 @@ const setBoard = (size = 3, count = 3) => {
         }
 
     }
-//console.log(`board: ${board[i][j]} marker: ${marker}`);
+
 
     function mark() {
         let x = this.classList[0].slice(-2,-1) * 1;
@@ -214,7 +221,7 @@ const tic = (() => {
         
         if(gb.win(x)){
             
-            alert(`${gb.getCurr} is the winner!`)
+            alert(`${gb.getCurr().getName()} is the winner!`)
         }
         else if(gb.tie(x)){
             alert("tie game");
