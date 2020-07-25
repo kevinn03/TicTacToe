@@ -88,9 +88,13 @@ const setBoard = (size = 3, count = 3) => {
                 
                 if(board[j][i] === marker ){
                     tally++;
+                    if(tally >= counter){return true;}
+                }
+                else{
+                    tally = 0;
                 }
                 }
-            if(tally === counter){return true;}
+            
             }
         return false;
     };
@@ -102,10 +106,15 @@ const setBoard = (size = 3, count = 3) => {
             for(let j = 0; j < board.length; j++){
                 
                 if(board[i][j] === marker ){
+                    
                     tally++;
+                    if(tally >= counter){return true;}
+                     }
+                else{
+                    tally = 0;
                 }
                 }
-            if(tally === counter){return true;}
+                
             }
         return false;
     };
@@ -115,8 +124,12 @@ const setBoard = (size = 3, count = 3) => {
         for (let i = 0; i < board.length; i++) {
             if(board[i][i] === marker){
                 tally++
+                if(tally >= counter){return true;}
             }
-            if(tally === counter){return true;}
+            else{
+                tally = 0;
+            }
+            
         }
         return false;
     };
@@ -127,10 +140,15 @@ const setBoard = (size = 3, count = 3) => {
         for (let i = 0; i < board.length; i++) {
             if(board[i][j] === marker){
                 tally++
+                if(tally >= counter){return true;}
                 j--;
-                
+
             }
-            if(tally === counter){return true;}
+            else{
+                tally = 0;
+                j--
+            }
+            
             
         }
         return false;
