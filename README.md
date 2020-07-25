@@ -1,1 +1,3 @@
-Tic tac Toe game
+TicTacToe game
+-dynamic board size
+-dynamic winning condition
