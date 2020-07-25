@@ -1,13 +1,10 @@
-/*const tic = ((gameBoard) => {
 
 
-
-})();
-*/
 const gameBoard = (() => {
     let board = [];
     let player = [];
     let current;
+    let counter;
     const container = document.querySelector(".game");
 
 
@@ -19,7 +16,9 @@ const gameBoard = (() => {
             current = player[0];
         }
     }
-const setBoard = (size = 3) => {
+    const getCurr = () => current;
+
+const setBoard = (size = 3, count = 3) => {
     if(size < 3){size = 3};
     for(let i = 0; i < size; i++){
         let arr = [];
@@ -28,9 +27,10 @@ const setBoard = (size = 3) => {
             arr.push("-");
         }
         board.push(arr);
+        counter = count
     }
 
-        
+    
     
     let frac = "";
     for(let i = 0; i < size; i++){
@@ -52,21 +52,27 @@ const setBoard = (size = 3) => {
             frac += "1fr "; 
         }
         container.style.cssText = `grid-template-columns: ${frac}`;
-    };
+    
+    _addPlayer();
+};
 
-    const getPlayer = () => player;
+    const getPlayer = () => {
+        return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
+    };
 
     const getBoard = () => board;
 
-    const addPlayer = (person) => {
-        if(player.includes(person) === false){
-            player.push(person);
-            return true;
-        }
-        return false;
+    const _addPlayer = () => {
+        const player1 = Playa("X");
+        
+        const player2 = Playa("O");
+        
+        player.push(player1);
+        player.push(player2);
+
     };
 
-    const _winVert = (marker) => {
+    /*const _winVert = (marker) => {
 
         
         for (let i = 0; i < board.length; i++) {
@@ -78,52 +84,66 @@ const setBoard = (size = 3) => {
         }
         return true;
     };
-
+    */
     const _winHor = (marker) => {
         for(let i = 0; i < board.length; i++){
-            
+            let tally = 0;
            
             for(let j = 0; j < board.length; j++){
-                if(board[i][j] !== marker ){return false;}
+                
+                if(board[i][j] === marker ){
+                    tally++;
+                }
+                
+                
             }
-            
-        }
-        return true;
+            if(tally === counter){return true;}
+            }
+        return false;
     };
 
-    const _winDiagLeft = (marker) => {
+    // const _winDiagLeft = (marker) => {
         
-        for (let i = 0; i < array.length; i++) {
-            if(board[i][i] !== marker){return false;}
+    //     for (let i = 0; i < board.length; i++) {
+    //         if(board[i][i] !== marker){return false;}
             
-        }
-        return true;
-    };
+    //     }
+    //     return true;
+    // };
 
-    const _winDiagRight = (marker) => {
+    // const _winDiagRight = (marker) => {
         
-        let j = board.length - 1;
-        for (let i = 0; i < array.length; i++) {
-            if(board[i][j] !== marker){
-                j--;
-                return false;}
+    //     let j = board.length - 1;
+    //     for (let i = 0; i < board.length; i++) {
+    //         if(board[i][j] !== marker){
+    //             j--;
+    //             return false;}
             
-        }
-        return true;
-    };
+    //     }
+    //     return true;
+    // };
 
     const win = (marker) => {
-
-        if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker)){return true;}
+       
+        // if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker))
+            if(_winHor(marker))
+        {
+            
+        return true;}
 
         return false;
     }
 
     const tie = () => {
-        if(!board.includes("-")){
-        return true;}
+        for(let i = 0; i < board.length; i++){
+            for(let j = 0; j < board.length; j++){
+                if(board[i][j].includes("-")){
+                    return false;
+                }
+            }
+        }
+        return true;
         
-        return false;
     };
 
     const render = () => {
@@ -137,14 +157,18 @@ const setBoard = (size = 3) => {
         }
 
     }
+//console.log(`board: ${board[i][j]} marker: ${marker}`);
 
     function mark() {
         let x = this.classList[0].slice(-2,-1) * 1;
         let y = this.classList[0].slice(-1) * 1;
         
         if(board[x][y] === "-"){
+            console.log(board[x][y]);
             board[x][y] = current.move();
-            render();
+            console.log(board[x][y]);
+            tic.test(current.move());
+            
             return true;
         }
 
@@ -154,29 +178,62 @@ const setBoard = (size = 3) => {
 
 
 
-return {setBoard, getBoard, addPlayer, win, render, tie, setCurr, getPlayer, player};
+return {setBoard, getBoard, win, render, tie, setCurr, getPlayer, getCurr};
 })();
 
 
 
-const Playa = (name) => {
-    let marker = "";
+const Playa = (marker, name = "John Doe") => {
+    
     
     const setMarker = (mark) =>{
         marker = mark;
     };
+    
     const move = () => marker;
     const setName = (nam) => name = nam;
     const getName = () => name; 
     return {getName,setMarker, move, setName };
 };
 
-window.onload = function(){
+const tic = (() => {
+    let gb = gameBoard;
+    let running = true;
+    const start = () => {
+        gb.setBoard();
+    
+        gb.render();
+        gb.setCurr();
+
+
+    };
+
+    const test = (x) => {
+        gb.render();
+        
+        
+        if(gb.win(x)){
+            
+            alert(`${gb.getCurr} is the winner!`)
+        }
+        else if(gb.tie(x)){
+            alert("tie game");
+        }
+        else{
+            gb.setCurr();
+        }
+    };
+    
+    return {start, test}
+
+})();
+
+tic.start();
+
     
     
    
-    gameBoard.setBoard();
-    gameBoard.render();
+    
 
-}
+
 
