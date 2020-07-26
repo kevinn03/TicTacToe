@@ -27,9 +27,14 @@ h1 {
     border: 1px solid black;
     
     text-align: center;
-    font-size: 12vw;
+    font-size: 8vw;
     margin: 0;
     
+}
+
+.box:hover{
+    background-color: lightblue;
+    cursor: pointer;
 }
 
 .xmark {
