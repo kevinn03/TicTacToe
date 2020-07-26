@@ -69,3 +69,7 @@ h1 {
 .second {
     color: rgb(2, 2, 100);
 }
+
+.highlight {
+    background-color: lightblue;
+}

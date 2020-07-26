@@ -56,17 +56,33 @@ const setBoard = (size = 3, count = 3) => {
 
     const getBoard = () => board;
 
+    const _highlight = (array) => {
+       ;
+        array.forEach((ele) => {
+            
+           
+            document.querySelector(`.box${ele}`).classList.add("highlight");
+        })
+    };
+
     const _winVert = (marker) => {
 
         for(let i = 0; i < board.length; i++){
             let tally = 0;
+            let pos = [];
            for(let j = 0; j < board.length; j++){
                 if(board[j][i] === marker ){
                     tally++;
-                    if(tally >= counter){return true;}
+                    pos.push(j + "" + i);
+                    
+                    if(tally >= counter){
+                        _highlight(pos);
+                        return true;
+                    }
                 }
                 else{
                     tally = 0;
+                    pos = [];
                 }
             }
             
@@ -77,13 +93,19 @@ const setBoard = (size = 3, count = 3) => {
     const _winHor = (marker) => {
         for(let i = 0; i < board.length; i++){
             let tally = 0;
+            let pos = [];
            for(let j = 0; j < board.length; j++){
                 if(board[i][j] === marker ){
                     tally++;
-                    if(tally >= counter){return true;}
+                    pos.push(i + "" + j);
+                    if(tally >= counter){
+                        _highlight(pos);
+                        return true;
+                    }
                  }
                 else{
                     tally = 0;
+                    pos = [];
                 }
             }
             
@@ -93,13 +115,19 @@ const setBoard = (size = 3, count = 3) => {
 
     const _winDiagLeft = (marker) => {
         let tally = 0;
+        let pos = [];
         for (let i = 0; i < board.length; i++) {
             if(board[i][i] === marker){
                 tally++
-                if(tally >= counter){return true;}
+                pos.push(i + "" + i);
+                if(tally >= counter){
+                    _highlight(pos);
+                    return true;
+                }
             }
             else{
                 tally = 0;
+                pos = [];
             }
         }
         return false;
@@ -107,15 +135,21 @@ const setBoard = (size = 3, count = 3) => {
 
     const _winDiagRight = (marker) => {
         let tally = 0;
+        let pos = [];
         let j = board.length - 1;
         for (let i = 0; i < board.length; i++) {
             if(board[i][j] === marker){
                 tally++
-                if(tally >= counter){return true;}
+                pos.push(i + "" + j);
+                if(tally >= counter){
+                    _highlight(pos);
+                    return true;
+                }
                 j--;
             }
             else{
                 tally = 0;
+                pos = [];
                 j--
             }
             
