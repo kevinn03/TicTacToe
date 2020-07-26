@@ -14,78 +14,53 @@ const getCounter = () => counter;
 
 const clearBoard = () => {
     board = [];
-    
-  while (container.lastElementChild) {
+    while (container.lastElementChild) {
     container.removeChild(container.lastElementChild);
   }
-} 
+}; 
+
 const setBoard = (size = 3, count = 3) => {
      
     if(size <= 3){
-        size = 3
-        
-        count = 3;};
+        size = 3;
+        count = 3;
+    }
     
     if(count > size){
         count = size;
-        
     }
-
+    
+    counter = count;
     dimension = size;
+    
     for(let i = 0; i < size; i++){
         let arr = [];
-        
         for(let j = 0; j < size; j++){
             arr.push("-");
         }
         board.push(arr);
-        counter = count;
-        
     }
 
-    
-    
-    let frac = "";
     for(let i = 0; i < size; i++){
-            
         for (let j = 0; j < size; j++) {
             let grid = document.createElement("div");
-            
             grid.classList.add(`box${i}${j}`);
             grid.classList.add("box");
-            
-            grid.addEventListener("click", function(){
-                let that = this;
-                mark(tic.getCurr().move(), that);
-            });
-           ;
             container.appendChild(grid);
         }
-    
     }
     
-        for(let k = 0; k < size; k++){
-            frac += "1fr "; 
-        }
-        container.style.cssText = `grid-template-columns: ${frac}`;
-    
-    
+    let frac = "1fr ";
+    container.style.cssText = "grid-template-columns:" + frac.repeat(size);
 };
-
-    
 
     const getBoard = () => board;
 
-    
-
     const _winVert = (marker) => {
 
-        
         for(let i = 0; i < board.length; i++){
             let tally = 0;
-           
-            for(let j = 0; j < board.length; j++){
-                
+           for(let j = 0; j < board.length; j++){
                 if(board[j][i] === marker ){
                     tally++;
                     if(tally >= counter){return true;}
@@ -93,29 +68,26 @@ const setBoard = (size = 3, count = 3) => {
                 else{
                     tally = 0;
                 }
-                }
-            
             }
+            
+        }
         return false;
     };
     
     const _winHor = (marker) => {
         for(let i = 0; i < board.length; i++){
             let tally = 0;
-           
-            for(let j = 0; j < board.length; j++){
-                
+           for(let j = 0; j < board.length; j++){
                 if(board[i][j] === marker ){
-                    
                     tally++;
                     if(tally >= counter){return true;}
-                     }
+                 }
                 else{
                     tally = 0;
                 }
-                }
-                
             }
+            
+        }
         return false;
     };
 
@@ -129,7 +101,6 @@ const setBoard = (size = 3, count = 3) => {
             else{
                 tally = 0;
             }
-            
         }
         return false;
     };
@@ -142,7 +113,6 @@ const setBoard = (size = 3, count = 3) => {
                 tally++
                 if(tally >= counter){return true;}
                 j--;
-
             }
             else{
                 tally = 0;
@@ -155,13 +125,9 @@ const setBoard = (size = 3, count = 3) => {
     };
 
     const win = (marker) => {
-       
-        if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker))
-            
-        {
-            
-        return true;}
-
+       if(_winVert(marker) || _winHor(marker) || _winDiagLeft(marker) || _winDiagRight(marker)){
+            return true;
+        }
         return false;
     }
 
@@ -182,17 +148,13 @@ const setBoard = (size = 3, count = 3) => {
             for (let j = 0; j < board.length; j++) {
                 let square = document.querySelector(`.box${i}${j}`);
                 square.textContent = board[i][j];
-            
             }   
-            
         }
-
     }
 
     const _valid = (x, y) => {
         
         if(board[x][y] === "-"){
-            
             return true;
         }
         alert("this spot is taken");
@@ -212,30 +174,22 @@ const setBoard = (size = 3, count = 3) => {
                attach.classList.add("omark");
            }
             board[x][y] = marker;
-            
-            tic.test(marker);
-            
             return true;
         }
         console.log("This spot is taken!");
         return false;
     }
 
-
-
-
-return {setBoard, getBoard, win, render, tie, clearBoard, getDimension, getCounter};
+return {setBoard, getBoard, win, render, tie, clearBoard, getDimension, getCounter, mark};
 })();
 
 
 
 const Playa = (marker, name = "John Doe") => {
     
-    
     const setMarker = (mark) =>{
         marker = mark;
     };
-    
     const move = () => marker;
     const setName = (nam) => {
         if(nam === null || nam === ""){
@@ -248,7 +202,8 @@ const Playa = (marker, name = "John Doe") => {
     return {getName,setMarker, move, setName };
 };
 
-const tic = (() => {
+
+const Tic = (() => {
     let gb = gameBoard;
     let player = [];
     let current;
@@ -260,10 +215,12 @@ const tic = (() => {
         let winCond = prompt("Choose how many in a row to win") * 1;
         gb.setBoard(size, winCond);
         _addPlayer();
-        gb.render();
         setCurr();
+        _event();
+        gb.render();
 
     };
+    
     const getPlayer = () => {
         return `player1: ${player[0].getName()} \n player2: ${player[1].getName()}`;
     };
@@ -281,6 +238,29 @@ const tic = (() => {
 
     };
 
+    /*  Handles the board click
+        validates the chosen square
+        if valid marks the board through the gameboard mark function
+    */
+    const _event = () => {
+        let grid = document.querySelectorAll(".box");
+        
+        grid.forEach((box) => {
+            box.addEventListener("click", function(){
+                let that = this;
+                let currentMarker = getCurr().move();
+                if(!gb.win(currentMarker)){
+                    let marked = gb.mark(currentMarker, that);
+                    if (marked){
+                    _checkForWin(currentMarker);
+                    }
+                }
+                
+                })
+            }
+        )
+    };
+
     const setCurr = () => {
         if(current === player[0]){
             current = player[1];
@@ -289,6 +269,7 @@ const tic = (() => {
             current = player[0];
         }
     };
+
     const getCurr = () => current;
 
     const _clearGame = () => {
@@ -299,6 +280,7 @@ const tic = (() => {
         gb.clearBoard();
         current = null;
         gb.setBoard(gb.getDimension(), gb.getCounter());
+        _event();
         gb.render();
         setCurr();
     };
@@ -312,13 +294,13 @@ const tic = (() => {
 
     };
 
-    const test = (x) => {
+    const _checkForWin = (x) => {
         gb.render();
         
         
         if(gb.win(x)){
             _displayW();
-            //alert(`${getCurr().getName()} is the winner!`)
+            
         }
         else if(gb.tie(x)){
             alert("tie game");
@@ -328,8 +310,8 @@ const tic = (() => {
         }
     };
     
-    return {test, setCurr, getPlayer, getCurr, initiate}
+    return {setCurr, getPlayer, getCurr, initiate}
 
 })();
 
-tic.initiate();
+Tic.initiate();

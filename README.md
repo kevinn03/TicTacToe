@@ -1,3 +1,3 @@
 TicTacToe game
--dynamic board size
--dynamic winning condition
+\n -dynamic board size
+\n -dynamic winning condition
